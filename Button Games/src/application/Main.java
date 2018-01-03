@@ -1,5 +1,6 @@
 package application;
 
+import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -13,23 +14,42 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application {
+	int score = 0;
+	boolean scoring = false;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("Button Games");
-			StackPane sp = new StackPane();
-			
-			Label label = new Label("Click");
 			Button button = new Button("Click Me");
 			
-			button.setOnAction(value ->
+			button.setOnAction(new EventHandler<ActionEvent>()
 			{
-				label.setText("Clicked!");
+				@Override
+				public void handle(ActionEvent event)
+				{
+					if(scoring)
+					{
+						score++;
+					}
+					
+				}
 			});
 			
-			HBox h = new HBox(button, label);
+			long timeStep = System.nanoTime() + 1000000001;
+			AnimationTimer timer =  new AnimationTimer()
+			{
+				public void handle(long now)
+				{
+					if(now>timeStep)
+					{
+						timeStep = now + 1000000001;
+					}
+				}
+			};
 			
-			sp.getChildren().add(h);
+			StackPane sp = new StackPane();
+			HBox hbox = new HBox();
+			sp.getChildren().add(button);
 			Scene scene = new Scene(sp, 400,400);
 			
 			primaryStage.setScene(scene);
