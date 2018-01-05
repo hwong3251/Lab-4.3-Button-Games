@@ -14,13 +14,15 @@ import javafx.stage.Stage;
 
 
 public class Main extends Application {
-	int score = 0;
-	boolean scoring = false;
+	static int score = 0;
+	boolean scoring = true;
+	long timeStep; 
 	@Override
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("Button Games");
-			Button button = new Button("Click Me");
+			Button button = new Button();
+			Button button1 = new Button();
 			
 			button.setOnAction(new EventHandler<ActionEvent>()
 			{
@@ -35,21 +37,39 @@ public class Main extends Application {
 				}
 			});
 			
-			long timeStep = System.nanoTime() + 1000000001;
+			timeStep = System.nanoTime() + 10000000000L;
 			AnimationTimer timer =  new AnimationTimer()
 			{
 				public void handle(long now)
 				{
 					if(now>timeStep)
 					{
-						timeStep = now + 1000000001;
+						scoring = !scoring;
+						button.setText("Don't Click");
+						button.setDisable(true);
 					}
+					else
+					{
+						button.setText("Click Me!");
+					}
+					
 				}
 			};
+			
+			button1.setOnAction(new EventHandler<ActionEvent>()
+			{
+				@Override
+				public void handle(ActionEvent event)
+				{
+					timer.start();
+					button1.setDisable(true);
+				}
+			});
 			
 			StackPane sp = new StackPane();
 			HBox hbox = new HBox();
 			sp.getChildren().add(button);
+			sp.getChildren().add(button1);
 			Scene scene = new Scene(sp, 400,400);
 			
 			primaryStage.setScene(scene);
