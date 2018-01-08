@@ -22,8 +22,10 @@ public class Main extends Application {
 		try {
 			primaryStage.setTitle("Button Games");
 			Button button = new Button();
+				button.setTranslateX(60);
 			Button button1 = new Button();
-			
+				button1.setTranslateX(-60);
+			Label label = new Label("Score: ");
 			button.setOnAction(new EventHandler<ActionEvent>()
 			{
 				@Override
@@ -37,13 +39,14 @@ public class Main extends Application {
 				}
 			});
 			
-			timeStep = System.nanoTime() + 10000000000L;
+			
 			AnimationTimer timer =  new AnimationTimer()
 			{
 				public void handle(long now)
 				{
 					if(now>timeStep)
 					{
+						timeStep = System.nanoTime() + 10000000000L;
 						scoring = !scoring;
 						button.setText("Don't Click");
 						button.setDisable(true);
@@ -70,6 +73,7 @@ public class Main extends Application {
 			HBox hbox = new HBox();
 			sp.getChildren().add(button);
 			sp.getChildren().add(button1);
+			sp.getChildren().add(label);
 			Scene scene = new Scene(sp, 400,400);
 			
 			primaryStage.setScene(scene);
