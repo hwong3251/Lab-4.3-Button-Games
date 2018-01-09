@@ -9,6 +9,7 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
+import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
 
@@ -21,11 +22,17 @@ public class Main extends Application {
 	public void start(Stage primaryStage) {
 		try {
 			primaryStage.setTitle("Button Games");
-			Button button = new Button();
+			Button button = new Button("CLICK");
 				button.setTranslateX(60);
-			Button button1 = new Button();
+				button.setDisable(true);
+			Button button1 = new Button("START");
 				button1.setTranslateX(-60);
-			Label label = new Label("Score: ");
+			Label lb = new Label("Score: ");
+				lb.setTranslateY(-50);
+			Text txt = new Text("The goal of the game is to click the button \n"
+						+ "as many times as possible in 10 seconds.");
+				txt.setTranslateY(-100);
+				
 			button.setOnAction(new EventHandler<ActionEvent>()
 			{
 				@Override
@@ -38,43 +45,38 @@ public class Main extends Application {
 					
 				}
 			});
-			
-			
-			AnimationTimer timer =  new AnimationTimer()
-			{
-				public void handle(long now)
-				{
-					if(now>timeStep)
-					{
-						timeStep = System.nanoTime() + 10000000000L;
-						scoring = !scoring;
-						button.setText("Don't Click");
-						button.setDisable(true);
-					}
-					else
-					{
-						button.setText("Click Me!");
-					}
-					
-				}
-			};
-			
 			button1.setOnAction(new EventHandler<ActionEvent>()
 			{
-				@Override
 				public void handle(ActionEvent event)
 				{
-					timer.start();
 					button1.setDisable(true);
+					button.setDisable(false);
 				}
 			});
 			
+			timeStep = System.nanoTime()+1000000000L;
+			new AnimationTimer()
+			{
+				public void handle(long now)
+				{
+					if(now > timeStep)
+					{
+						timeStep = now + 1000000000L;
+					}
+					
+					lb.setText("Score: " + Integer.toString(score));
+					
+				}
+			}.start();
+			
+			
 			StackPane sp = new StackPane();
-			HBox hbox = new HBox();
+
 			sp.getChildren().add(button);
 			sp.getChildren().add(button1);
-			sp.getChildren().add(label);
-			Scene scene = new Scene(sp, 400,400);
+			sp.getChildren().add(txt);
+			sp.getChildren().add(lb);
+			Scene scene = new Scene(sp, 250,250);
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
