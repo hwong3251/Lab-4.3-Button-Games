@@ -1,5 +1,10 @@
 package application;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.time.LocalDateTime;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
@@ -18,6 +23,7 @@ public class Main extends Application {
 	static int score = 0;
 	boolean scoring = true;
 	long timeStep; 
+	int t = 0;
 	@Override
 	public void start(Stage primaryStage) {
 		try {
@@ -32,7 +38,10 @@ public class Main extends Application {
 			Text txt = new Text("The goal of the game is to click the button \n"
 						+ "as many times as possible in 10 seconds.");
 				txt.setTranslateY(-100);
-				
+			Label lb1 = new Label("Time: ");
+				lb1.setTranslateY(-35);
+			
+//button interactions--------------------------------------------------------------------------------------//
 			button.setOnAction(new EventHandler<ActionEvent>()
 			{
 				@Override
@@ -45,43 +54,67 @@ public class Main extends Application {
 					
 				}
 			});
+			
 			button1.setOnAction(new EventHandler<ActionEvent>()
 			{
 				public void handle(ActionEvent event)
 				{
 					button1.setDisable(true);
-					button.setDisable(false);
+					new AnimationTimer()
+					{
+						long timeStep = System.nanoTime()+10000000000L;
+						long timestop = System.currentTimeMillis() + 10000L;
+						public void handle(long now)
+						{
+							long t = System.currentTimeMillis();
+							if(now > timeStep)
+							{
+								button.setDisable(true);
+								lb1.setText("Time: 0" );
+							}
+							else
+							{
+								t = 1+((timestop - t)/1000);
+								button.setDisable(false);
+								lb.setText("Score: " + Integer.toString(score));
+								lb1.setText("Time: " + Long.toString(t));
+							}
+						}
+					}.start();
 				}
 			});
 			
-			timeStep = System.nanoTime()+1000000000L;
-			new AnimationTimer()
-			{
-				public void handle(long now)
-				{
-					if(now > timeStep)
-					{
-						timeStep = now + 1000000000L;
-					}
-					
-					lb.setText("Score: " + Integer.toString(score));
-					
-				}
-			}.start();
-			
-			
+//LayOut------------------------------------------------------------------------------------------------//
 			StackPane sp = new StackPane();
 
 			sp.getChildren().add(button);
 			sp.getChildren().add(button1);
 			sp.getChildren().add(txt);
 			sp.getChildren().add(lb);
+			sp.getChildren().add(lb1);
 			Scene scene = new Scene(sp, 250,250);
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
-			
-		} catch(Exception e) {
+	
+//CSV--------------------------------------------------------------------------------------------------//
+			PrintWriter pw = null;
+			try 
+			{
+				pw = new PrintWriter(new File("results.csv"));
+			}
+			catch(FileNotFoundException e)
+			{
+				System.err.println(e);
+			}
+			StringBuilder sb = new StringBuilder();
+			sb.append("Name,High Score\n");
+			pw.write(sb.toString());
+			pw.close();
+//--------------------------------------------------------------------------------------------------------//
+		}
+		catch(Exception e) 
+		{
 			e.printStackTrace();
 		}
 	}
