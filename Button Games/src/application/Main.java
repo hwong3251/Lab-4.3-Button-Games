@@ -17,7 +17,10 @@ import javafx.scene.layout.StackPane;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
-
+//Hoi Lam Wong
+//Leon You 
+//Period 6-7 
+//Mr. Levin CSA
 
 public class Main extends Application {
 	static int score = 0;
@@ -96,7 +99,6 @@ public class Main extends Application {
 			
 			primaryStage.setScene(scene);
 			primaryStage.show();
-	
 //CSV--------------------------------------------------------------------------------------------------//
 			PrintWriter pw = null;
 			try 
@@ -110,7 +112,7 @@ public class Main extends Application {
 			StringBuilder sb = new StringBuilder();
 			sb.append("Name,High Score\n");
 			pw.write(sb.toString());
-			pw.close();
+			pw.close();		
 //--------------------------------------------------------------------------------------------------------//
 		}
 		catch(Exception e) 
@@ -118,8 +120,8 @@ public class Main extends Application {
 			e.printStackTrace();
 		}
 	}
-	
 	public static void main(String[] args) {
+		
 		launch(args);
 	}
 }
